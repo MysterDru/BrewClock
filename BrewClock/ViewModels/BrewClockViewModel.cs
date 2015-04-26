@@ -13,6 +13,9 @@ namespace BrewClock
     [ImplementPropertyChanged]
     public class BrewClockViewModel
     {
+        // default the event handler so we don't have to do a null check
+        public event EventHandler BrewCompleted = delegate { };
+
         private ICommand changeBrewingStateCommand;
         private IBrewClockTimer brewCountTimer;
 
@@ -36,10 +39,6 @@ namespace BrewClock
                 if (IsBrewing)
                 {
                     return string.Format("{0}s", BrewCountDown);
-                }
-                else if (BrewTime == 0 && !IsBrewing)
-                {
-                    return "Brew Up!";
                 }
                 else
                 {
@@ -131,6 +130,8 @@ namespace BrewClock
                 IsBrewing = false;
                 BrewCount += 1;
                 StartDisplay = "Start";
+
+                this.BrewCompleted(this, new EventArgs());
             });
 
             this.brewCountTimer.StartTimer();

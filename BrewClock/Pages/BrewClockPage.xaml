@@ -4,11 +4,15 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
 	xmlns:local="clr-namespace:BrewClock;assembly=BrewClock"
 	x:Class="BrewClock.BrewClockPage"
+    BackgroundColor="White"
 	Title="{Binding Title}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <local:InvertBooleanConverter x:Key="invertBool" />
+            <Style x:Key="LabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontSize" Value="Large" />
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -21,7 +25,8 @@
                                         Property=Width,
                                         Factor=0.5}">
                 <Label 
-				Text="Brews:" />
+				Text="Brews:"
+                Style="{StaticResource LabelStyle}"/>
             </ContentView>
             <ContentView
             Padding="10"
@@ -37,7 +42,8 @@
 				x:Name="BrewCount"
 				Text="{Binding BrewCount}"
 				HorizontalOptions="EndAndExpand"
-                XAlign="End" />
+                XAlign="End"
+                    Style="{StaticResource LabelStyle}"/>
             </ContentView>
 
             <StackLayout
@@ -61,7 +67,8 @@
                 <Label
 				    x:Name="BrewTime"
 				    Text="{Binding BrewTimeDisplay}"
-				    HorizontalOptions="Center" />
+				    HorizontalOptions="Center"
+                    Style="{StaticResource LabelStyle}"/>
 
                 <Stepper
 				    Minimum="{Binding MinimumBrewTime}"
@@ -84,10 +91,10 @@
                                         Property=Width,
                                         Factor=1}">
 
-                <Button
-			Text="{Binding StartDisplay}"
-			HeightRequest="40"
-			Command="{Binding ChangeBrewingStateCommand}" />
+            <Button
+			    Text="{Binding StartDisplay}"
+			    Command="{Binding ChangeBrewingStateCommand}"
+                HeightRequest="44"/>
             </ContentView>
 
         </RelativeLayout>

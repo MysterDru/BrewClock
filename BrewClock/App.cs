@@ -9,7 +9,11 @@ namespace BrewClock
 		public App ()
 		{
 			// The root page of your application
-			MainPage = new NavigationPage(new BrewClockPage ());
+            MainPage = new NavigationPage(new BrewClockPage())
+            {
+                BarBackgroundColor = Color.White,
+                BarTextColor = Color.Black
+            };
 		}
 
 		protected override void OnStart ()
