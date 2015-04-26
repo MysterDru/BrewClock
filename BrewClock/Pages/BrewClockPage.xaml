@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 
+	xmlns="http://xamarin.com/schemas/2014/forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+	xmlns:local="clr-namespace:BrewClock;assembly=BrewClock"
+	x:Class="BrewClock.BrewClockPage"
+	Title="{Binding Title}">
+
+	<ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InvertBooleanConverter x:Key="invertBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+	<ContentPage.Content>
+
+	<RelativeLayout>
+
+		<StackLayout
+			Orientation="Horizontal"
+			HorizontalOptions="CenterAndExpand"
+			RelativeLayout.WidthConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Width,
+                                        Factor=1}">
+			<Label 
+				Text="Brews:"
+				HorizontalOptions="Start" />
+			<Label 
+				x:Name="BrewCount"
+				Text="{Binding BrewCount}"
+				HorizontalOptions="End"
+			/>
+		</StackLayout>
+
+		<StackLayout
+			Orientation="Vertical"
+			Spacing="10"
+			RelativeLayout.XConstraint=
+                 "{ConstraintExpression Type=Constant, 
+                                        Constant=0}"
+			RelativeLayout.YConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Height,
+                                        Factor=0.33}"
+            RelativeLayout.HeightConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Height,
+                                        Factor=0.33}"
+        	RelativeLayout.WidthConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Width,
+                                        Factor=1}" >
+			<Label
+				x:Name="BrewTime"
+				Text="{Binding BrewTimeDisplay}"
+				HorizontalOptions="Center" />
+
+			<Stepper
+				Minimum="{Binding MinimumBrewCount}"
+				Value="{Binding BrewTime, Mode=TwoWay}"
+				HorizontalOptions="Center"
+			/>
+		</StackLayout>
+
+		<ContentView
+		Padding="10"
+		RelativeLayout.XConstraint=
+                 "{ConstraintExpression Type=Constant, 
+                                        Constant=0}"
+             RelativeLayout.YConstraint=
+                 "{ConstraintExpression Type=RelativeToParent, 
+                                        Property=Height,
+                                        Factor=1,
+                                        Constant=-60}"
+		RelativeLayout.WidthConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Width,
+                                        Factor=1}">
+
+		<Button
+			Text="{Binding StartDisplay}"
+			HeightRequest="40"
+			Command="{Binding StartBrewCommand}" />
+		</ContentView>
+
+	</RelativeLayout>
+
+	</ContentPage.Content>
+</ContentPage>
