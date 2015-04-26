@@ -2,11 +2,6 @@
 using PropertyChanged;
 using System.Windows.Input;
 using Xamarin.Forms;
-#if __ANDROID__
-using Android.OS;
-#elif __IOS__
-using Foundation;
-#endif
 
 namespace BrewClock
 {
@@ -17,7 +12,7 @@ namespace BrewClock
         public event EventHandler BrewCompleted = delegate { };
 
         private ICommand changeBrewingStateCommand;
-        private IBrewClockTimer brewCountTimer;
+        private ICountDownTimer brewCountTimer;
 
         /// <summary>
         /// Identifies the title of the page
@@ -113,11 +108,10 @@ namespace BrewClock
         {
             var secs = BrewTime * 60 * 1000;
 
-#if __ANDROID__
-            this.brewCountTimer = new BrewClockTimer(secs, 1000);
-#elif __IOS__
-            this.brewCountTimer = new BrewClockTimer(secs, 1000);
-#endif
+            // resolve and initialize the timer
+            this.brewCountTimer = DependencyService.Get<ICountDownTimer>();
+            this.brewCountTimer.Initialize(secs, 1000);
+
             this.BrewCountDown = secs / 1000;
 
             this.brewCountTimer.TickChanged += ((object sender, EventArgs<long> e) =>
@@ -150,100 +144,5 @@ namespace BrewClock
             this.IsBrewing = false;
             this.StartDisplay = "Start";
         }
-
-        /// <summary>
-        /// Interface for abstracting timer logic to each platform
-        /// </summary>
-        private interface IBrewClockTimer
-        {
-            event EventHandler<EventArgs<long>> TickChanged;
-            event EventHandler Finished;
-
-            void CancelTimer();
-            void StartTimer();
-        }
-
-#if __ANDROID__
-        private class BrewClockTimer : CountDownTimer, IBrewClockTimer
-        {
-            public event EventHandler Finished = delegate { };
-
-            public event EventHandler<EventArgs<long>> TickChanged = delegate { };
-
-            public BrewClockTimer(long millisInFuture, long countDownInterval)
-                : base(millisInFuture, countDownInterval)
-            {
-            }
-
-            public override void OnTick(long millisUntilFinished)
-            {
-                this.TickChanged(this, new EventArgs<long>(millisUntilFinished));
-            }
-
-            public override void OnFinish()
-            {
-                this.Finished(this, new EventArgs());
-            }
-
-            public void CancelTimer()
-            {
-                this.Cancel();
-            }
-
-            public void StartTimer()
-            {
-                this.Start();
-            }
-        }
-#elif __IOS__
-        private class BrewClockTimer : IBrewClockTimer
-        {
-            public event EventHandler Finished = delegate { };
-
-            public event EventHandler<EventArgs<long>> TickChanged = delegate { };
-
-            private NSTimer timer;
-            private long millisInFuture, countDownInterval, hours, minutes, seconds, secondsLeft;
-
-            public BrewClockTimer(long millisInFuture, long countDownInterval)
-            {
-                this.millisInFuture = millisInFuture;
-                this.countDownInterval = countDownInterval;
-            }
-
-            public void CancelTimer()
-            {
-                this.timer.Invalidate();
-            }
-
-            public void StartTimer()
-            {
-                this.secondsLeft = this.millisInFuture / 1000;
-
-                this.timer = NSTimer.CreateRepeatingScheduledTimer(this.countDownInterval / 1000, this.UpdateCounter);
-            }
-
-            private void UpdateCounter(NSTimer theTimer)
-            {
-                if (this.secondsLeft > 0)
-                {
-                    this.secondsLeft--;
-                    this.hours = secondsLeft / 3600;
-                    this.minutes = (secondsLeft % 3600) / 60;
-                    this.seconds = (secondsLeft % 3600) % 60;
-
-                    // expexted value is in milliseconds
-                    this.TickChanged(this, new EventArgs<long>(this.secondsLeft * 1000));
-                }
-                else
-                {
-                    this.Finished(this, new EventArgs());
-                    this.CancelTimer();
-
-                    this.secondsLeft = this.millisInFuture / 1000;
-                }
-            }
-        }
-#endif
     }
 }
