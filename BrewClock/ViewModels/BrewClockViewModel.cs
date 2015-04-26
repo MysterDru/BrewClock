@@ -55,7 +55,12 @@ namespace BrewClock
         /// <summary>
         /// Total number of brews the user has made
         /// </summary>
-        public int BrewCount { get; set; }
+        // proxied to the App class
+        public int BrewCount
+        {
+            get { return App.Instance.TotalBrewCount; }
+            set { App.Instance.TotalBrewCount = value; }
+        }
 
         /// <summary>
         /// Identifies the minimum time allowed for brewing
