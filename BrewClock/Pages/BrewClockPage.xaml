@@ -6,34 +6,41 @@
 	x:Class="BrewClock.BrewClockPage"
 	Title="{Binding Title}">
 
-	<ContentPage.Resources>
+    <ContentPage.Resources>
         <ResourceDictionary>
             <local:InvertBooleanConverter x:Key="invertBool" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
-	<ContentPage.Content>
-
-	<RelativeLayout>
-
-		<StackLayout
-			Orientation="Horizontal"
-			HorizontalOptions="CenterAndExpand"
-			RelativeLayout.WidthConstraint=
+    <ContentPage.Content>
+        <RelativeLayout>
+            <ContentView
+            Padding="10"
+            RelativeLayout.WidthConstraint=
                  "{ConstraintExpression Type=RelativeToParent,
                                         Property=Width,
-                                        Factor=1}">
-			<Label 
-				Text="Brews:"
-				HorizontalOptions="Start" />
-			<Label 
+                                        Factor=0.5}">
+                <Label 
+				Text="Brews:" />
+            </ContentView>
+            <ContentView
+            Padding="10"
+            RelativeLayout.WidthConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Width,
+                                        Factor=0.5}"
+                RelativeLayout.XConstraint=
+                 "{ConstraintExpression Type=RelativeToParent,
+                                        Property=Width,
+                                        Factor=0.5}">
+                <Label 
 				x:Name="BrewCount"
 				Text="{Binding BrewCount}"
-				HorizontalOptions="End"
-			/>
-		</StackLayout>
+				HorizontalOptions="EndAndExpand"
+                XAlign="End" />
+            </ContentView>
 
-		<StackLayout
+            <StackLayout
 			Orientation="Vertical"
 			Spacing="10"
 			RelativeLayout.XConstraint=
@@ -51,19 +58,18 @@
                  "{ConstraintExpression Type=RelativeToParent,
                                         Property=Width,
                                         Factor=1}" >
-			<Label
-				x:Name="BrewTime"
-				Text="{Binding BrewTimeDisplay}"
-				HorizontalOptions="Center" />
+                <Label
+				    x:Name="BrewTime"
+				    Text="{Binding BrewTimeDisplay}"
+				    HorizontalOptions="Center" />
 
-			<Stepper
-				Minimum="{Binding MinimumBrewCount}"
-				Value="{Binding BrewTime, Mode=TwoWay}"
-				HorizontalOptions="Center"
-			/>
-		</StackLayout>
-
-		<ContentView
+                <Stepper
+				    Minimum="{Binding MinimumBrewTime}"
+                    Maximum="{Binding MaximumBrewTime}"
+				    Value="{Binding BrewTime, Mode=TwoWay}"
+				    HorizontalOptions="Center" />
+            </StackLayout>
+            <ContentView
 		Padding="10"
 		RelativeLayout.XConstraint=
                  "{ConstraintExpression Type=Constant, 
@@ -78,13 +84,13 @@
                                         Property=Width,
                                         Factor=1}">
 
-		<Button
+                <Button
 			Text="{Binding StartDisplay}"
 			HeightRequest="40"
-			Command="{Binding StartBrewCommand}" />
-		</ContentView>
+			Command="{Binding ChangeBrewingStateCommand}" />
+            </ContentView>
 
-	</RelativeLayout>
+        </RelativeLayout>
 
-	</ContentPage.Content>
+    </ContentPage.Content>
 </ContentPage>
