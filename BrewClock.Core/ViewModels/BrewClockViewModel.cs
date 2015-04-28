@@ -1,16 +1,16 @@
 ﻿using System;
 using PropertyChanged;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace BrewClock
 {
     [ImplementPropertyChanged]
-    public class BrewClockViewModel
+    public class BrewClockViewModel : BaseViewModel
     {
         // default the event handler so we don't have to do a null check
         public event EventHandler BrewCompleted = delegate { };
 
+        private IApp app;
         private ICommand changeBrewingStateCommand;
         private ICountDownTimer brewCountTimer;
 
@@ -53,8 +53,8 @@ namespace BrewClock
         // proxied to the App class
         public int BrewCount
         {
-            get { return App.Instance.TotalBrewCount; }
-            set { App.Instance.TotalBrewCount = value; }
+            get { return this.app.TotalBrewCount; }
+            set { this.app.TotalBrewCount = value; }
         }
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace BrewClock
         {
             get
             {
-                return changeBrewingStateCommand ?? (changeBrewingStateCommand = new Command(() =>
-                {
+                return changeBrewingStateCommand ?? (changeBrewingStateCommand = new RelayCommand((object value) =>
+                {                        
                     if (this.IsBrewing)
                     {
                         this.StopBrewing();
@@ -100,6 +100,8 @@ namespace BrewClock
 
         public BrewClockViewModel()
         {
+            this.app = XLabs.Ioc.Resolver.Resolve<IApp>();
+
             this.Title = "Brew Clock";
             this.BrewTime = 3;
             this.BrewCountDown = 0;
@@ -114,7 +116,7 @@ namespace BrewClock
             var secs = BrewTime * 60 * 1000;
 
             // resolve and initialize the timer
-            this.brewCountTimer = DependencyService.Get<ICountDownTimer>();
+            this.brewCountTimer = XLabs.Ioc.Resolver.Resolve<ICountDownTimer>();
             this.brewCountTimer.Initialize(secs, 1000);
 
             this.BrewCountDown = secs / 1000;

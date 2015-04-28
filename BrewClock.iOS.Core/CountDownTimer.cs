@@ -1,8 +1,6 @@
 using System;
 using Foundation;
 
-[assembly: Xamarin.Forms.Dependency(typeof(BrewClock.iOS.CountDownTimer))]
-
 namespace BrewClock.iOS
 {
     public class CountDownTimer : ICountDownTimer

@@ -1,17 +1,12 @@
 ﻿using System;
 
 using Xamarin.Forms;
+using XLabs.Ioc.SimpleInjectorContainer;
 
 namespace BrewClock
 {
-    public class App : Application
+    public class App : Application, IApp
     {
-        // let's us get at the app staically
-        public static App Instance
-        {
-            get { return Xamarin.Forms.Application.Current as App; }
-        }
-
         /// <summary>
         /// Let's us track the total count across sessions of the app 
         /// </summary>
@@ -38,6 +33,19 @@ namespace BrewClock
 
         public App()
         {
+            
+            var container = new SimpleInjectorContainer();
+
+            container.Register<IApp>(this);
+
+            #if __ANDROID__
+            container.Register<ICountDownTimer, BrewClock.Droid.CountDownTimer>();
+            #elif __IOS__
+            container.Register<ICountDownTimer, BrewClock.iOS.CountDownTimer>();
+            #endif
+
+            XLabs.Ioc.Resolver.SetResolver(container.GetResolver());
+
             // The root page of your application
             MainPage = new NavigationPage(new BrewClockPage())
             {
