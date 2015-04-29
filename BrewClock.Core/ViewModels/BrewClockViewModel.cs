@@ -9,6 +9,9 @@ namespace BrewClock
     public class BrewClockViewModel
     {
         // default the event handler so we don't have to do a null check
+        /// <summary>
+        /// Let the view know when the brew is completed so they can alert the user
+        /// </summary>
         public event EventHandler BrewCompleted = delegate { };
 
         private ICommand changeBrewingStateCommand;
@@ -111,13 +114,13 @@ namespace BrewClock
 
         private void StartBrewing()
         {
-            var secs = BrewTime * 60 * 1000;
+            var millisecs = BrewTime * 60 * 1000;
 
             // resolve and initialize the timer
             this.brewCountTimer = DependencyService.Get<ICountDownTimer>();
-            this.brewCountTimer.Initialize(secs, 1000);
+            this.brewCountTimer.Initialize(millisecs, 1000);
 
-            this.BrewCountDown = secs / 1000;
+            this.BrewCountDown = millisecs / 1000;
 
             this.brewCountTimer.TickChanged += ((object sender, EventArgs<long> e) =>
             {

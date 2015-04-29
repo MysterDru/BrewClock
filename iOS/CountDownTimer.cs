@@ -1,6 +1,8 @@
 using System;
 using Foundation;
 
+// mark the CountDownTimer class as a dependancy. Once done, it can be referenced
+// using DependencyService.Get()
 [assembly: Xamarin.Forms.Dependency(typeof(BrewClock.iOS.CountDownTimer))]
 
 namespace BrewClock.iOS
@@ -12,7 +14,6 @@ namespace BrewClock.iOS
 
         private NSTimer timer;
         private long millisInFuture, countDownInterval, hours, minutes, seconds, secondsLeft;
-
 
         public void Initialize(long millisInFuture, long countDownInterval)
         {

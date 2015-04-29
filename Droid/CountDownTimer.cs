@@ -1,5 +1,7 @@
 using System;
 
+// mark the CountDownTimer class as a dependancy. Once done, it can be referenced
+// using DependencyService.Get()
 [assembly: Xamarin.Forms.Dependency(typeof(BrewClock.Droid.CountDownTimer))]
 
 namespace BrewClock.Droid
