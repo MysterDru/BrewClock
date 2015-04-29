@@ -14,10 +14,13 @@ namespace BrewClock
     public class BrewClockViewModel
     {
         // default the event handler so we don't have to do a null check
+        /// <summary>
+        /// Let the view know when the brew is completed so they can alert the user
+        /// </summary>
         public event EventHandler BrewCompleted = delegate { };
 
         private ICommand changeBrewingStateCommand;
-        private IBrewClockTimer brewCountTimer;
+        private BrewClockTimer brewCountTimer;
 
         /// <summary>
         /// Identifies the title of the page
@@ -116,14 +119,11 @@ namespace BrewClock
 
         private void StartBrewing()
         {
-            var secs = BrewTime * 60 * 1000;
+            var millisecs = BrewTime * 60 * 1000;
 
-#if __ANDROID__
-            this.brewCountTimer = new BrewClockTimer(secs, 1000);
-#elif __IOS__
-            this.brewCountTimer = new BrewClockTimer(secs, 1000);
-#endif
-            this.BrewCountDown = secs / 1000;
+            this.brewCountTimer = new BrewClockTimer(millisecs, 1000);
+
+            this.BrewCountDown = millisecs / 1000;
 
             this.brewCountTimer.TickChanged += ((object sender, EventArgs<long> e) =>
             {
@@ -157,19 +157,11 @@ namespace BrewClock
         }
 
         /// <summary>
-        /// Interface for abstracting timer logic to each platform
+        /// BrewClockTimer: platform specific countdown timer.
         /// </summary>
-        private interface IBrewClockTimer
-        {
-            event EventHandler<EventArgs<long>> TickChanged;
-            event EventHandler Finished;
-
-            void CancelTimer();
-            void StartTimer();
-        }
-
+        // compiler directives to indicate which class to use
 #if __ANDROID__
-        private class BrewClockTimer : CountDownTimer, IBrewClockTimer
+        private class BrewClockTimer : CountDownTimer
         {
             public event EventHandler Finished = delegate { };
 
@@ -201,7 +193,7 @@ namespace BrewClock
             }
         }
 #elif __IOS__
-        private class BrewClockTimer : IBrewClockTimer
+        private class BrewClockTimer
         {
             public event EventHandler Finished = delegate { };
 

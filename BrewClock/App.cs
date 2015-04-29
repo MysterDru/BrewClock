@@ -6,7 +6,7 @@ namespace BrewClock
 {
     public class App : Application
     {
-        // let's us get at the app staically
+        // let's us get at the app statically
         public static App Instance
         {
             get { return Xamarin.Forms.Application.Current as App; }
@@ -39,11 +39,16 @@ namespace BrewClock
         public App()
         {
             // The root page of your application
-            MainPage = new NavigationPage(new BrewClockPage())
-            {
-                BarBackgroundColor = Color.White,
-                BarTextColor = Color.Black
-            };
+
+            // Create main page stand alone
+            MainPage = new BrewClockPage();
+
+            // Create the main page with a navigation page
+            //MainPage = new NavigationPage(new BrewClockPage())
+            //{
+            //    BarBackgroundColor = Color.White,
+            //    BarTextColor = Color.Black
+            //};
         }
 
         protected override void OnStart()
