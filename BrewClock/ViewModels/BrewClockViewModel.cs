@@ -10,7 +10,7 @@ using Foundation;
 
 namespace BrewClock
 {
-    [ImplementPropertyChanged]
+    [AddINotifyPropertyChangedInterface]
     public class BrewClockViewModel
     {
         // default the event handler so we don't have to do a null check
